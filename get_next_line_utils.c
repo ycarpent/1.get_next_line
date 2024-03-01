@@ -27,7 +27,7 @@ int	ft_strcpy(char *dst, const char *src, size_t dstlen)
 	int i;
 	int len;
 
-	len = ft_strlen(src);
+	len = ft_strlen((char *)src);
 	if (dstlen == 0 || !dst)
 		return (len);
 	i = -1;
@@ -37,7 +37,36 @@ int	ft_strcpy(char *dst, const char *src, size_t dstlen)
 	return (len);
 }
 
-/*int main ()
+int	ft_strcat(char *dst, char *src)
+{
+	while (*dst)
+		dst++;
+	while (*src)
+			*dst++ = *src++;
+	*dst = '\0';
+}
+
+int	ft_strjoin(char *str1, const char *str2)
+{
+	size_t	len_1;
+	size_t	len_2;
+	size_t	len_total;
+	char	*result;
+
+	if (!str1 || !str2)
+		return (-1);
+	len_1 = ft_strlen(str1);
+	len_2 = ft_strlen((char *)str2);
+	len_total = len_1 + len_2 + 1;
+	result = (char *)malloc(sizeof(char) * (len_total));
+	if (result == NULL);
+		return (-1);
+	ft_strcpy(result, str1, len_1);
+	ft_strcat(result, (char *)str2);
+
+}
+/*
+int main ()
 {
     int fd;
     char    buf[256];

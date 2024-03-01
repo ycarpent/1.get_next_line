@@ -12,7 +12,26 @@
 
 #include "get_next_line.h"
 
+
 int main(void)
+{
+	char *str1;
+	char *test;
+	char *str2;
+	size_t len;
+	size_t len2;
+
+	test = "uhfegyufgwqfuywqgfy123";
+	str2 = "456qfhuyqwigfqwf";
+	len = ft_strlen(test);
+	len2 = ft_strlen(str2);
+	str1 = (char *)malloc(sizeof(char) * len + len2);
+	ft_strcpy(str1, test, len + 1);
+	ft_strcat(str1, str2);
+	printf("Result: %s", str1);
+	return (0);
+}
+/*int main(void)
 {
     int		fd;
     char	*line;
@@ -29,4 +48,4 @@ int main(void)
     free(line);
     }
     return (0);
-}
+}*/

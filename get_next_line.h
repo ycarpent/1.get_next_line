@@ -20,12 +20,11 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <stdlib.h>
 
-
-typedef struct s_list
-{
-    char            *str_buf;
-    struct s_list    *next;
-}                       t_list;
+int ft_strlen(char *str);
+int	ft_strcat(char *dst, char *src);
+int	ft_strjoin(char *str1, const char *str2);
+int	ft_strcpy(char *dst, const char *src, size_t dstlen);
 
 #endif

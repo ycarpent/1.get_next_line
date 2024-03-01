@@ -14,9 +14,11 @@
 
 char	*get_next_line(int fd)
 {
-    static char		*buf;
+    char			*buf;
     char			*line;
-    int				fd;
+	static char		*stash;
+	//prolly unnecessary 
+    //int				fd;
     int				i;
 	
 	//Safety check
@@ -82,7 +84,7 @@ int	gnl_copy_buffer(char *buf, char *line)
 	line_len = ft_strlen(line);
 	while (buf[i] && buf[i] != '\n')
 		i++;
-	buf_len = ft_strlen(buf[++i]); //MAYBE WE NEED TO REMOVE ++ FROM THE INDEX
+	buf_len = ft_strlen(buf[++i]); //MAYBE REMOVE ++ FROM THE INDEX
 	ft_strcpy(line, buf[i], len)
 	return (0);
 }
