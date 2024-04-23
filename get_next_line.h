@@ -26,5 +26,7 @@ int ft_strlen(char *str);
 int	ft_strcat(char *dst, char *src);
 int	ft_strjoin(char *str1, const char *str2);
 int	ft_strcpy(char *dst, const char *src, size_t dstlen);
+int	gnl_found_newline(char *str);
+char	*gnl_buffer_to_line(char *buf, char *line, int newline);
 
 #endif

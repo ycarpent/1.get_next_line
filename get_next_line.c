@@ -14,39 +14,28 @@
 
 char	*get_next_line(int fd)
 {
-    char			*buf;
+    static char		buf[BUFFER_SIZE];
     char			*line;
-	static char		*stash;
-	//prolly unnecessary 
-    //int				fd;
     int				i;
 	
-	//Safety check
     i = 0;
-    if (BUFFER_SIZE <= 0 || fd <= 0 || open(file.txt) < 0)
+	line = NULL;// initialiser a NULL pour + de secu
+	if (BUFFER_SIZE <= 0 || fd < 0)// Safety check
         return (NULL);
-	//check if there are some chars in buffer
-	if (buf)
-		//copy all char after \n into line
-		gnl_copy_buffer(buf, line);
-	//check if there are some chars to read in file
-	//read them if thats the case
-    while (read(fd, buf, BUFFER_SIZE))
+	if (buf)// while buffer not empty
+		gnl_buffer_to_line(buf, line, gnl_found_newline(buf));// function buffer_into_line
+	if (gnl_found_newline(line))
+		return (line);
+    while (read(fd, buf, BUFFER_SIZE))// attempt to read
     {
-
-
-	//check if there is a newline in the buffer
-        if (gnl_found_newline(buf) = 0)
-			// append buffer to line
-		else
-			// append buffer until \n into line
+		gnl_buffer_to_line(buf, line, gnl_found_newline(buf));// function buffer_into_line
+		if (gnl_found_newline(line))
+			return (line);
     }
+	if (buf)// while buffer not empty
+		gnl_buffer_to_line(buf, line, gnl_found_newline(buf));// function buffer_into_line
     return (line);
 }
-//Function to read fd until \n
-//Function to copy buffer into string
-//Function to append each buffer one to the other / copy all list elements into a string
-//
 
 int	gnl_found_newline(char *str)
 {
@@ -55,36 +44,32 @@ int	gnl_found_newline(char *str)
     i = 0;
     while (str[i])
     {
-        if (str[i++] = '\n')
-            return (1); 
+        if (str[i++] == '\n')
+            return (i);
     }
-    return (0);
+    return (ft_strlen(str)); // +1 ?
 }
 
-int gnl_buffer_to_line(char *buf, char *line)
+char	*gnl_buffer_to_line(char *buf, char *line, int newline)
 {
-	int	i;
-	int	len;
-
-	i = -1;
-	len = 1;
-	while (buf[++i] && buf[i] != '\n')
-		len++;
-	ft_strcpy(line, buf, len)
-	return (0);
-}
-
-int	gnl_copy_buffer(char *buf, char *line)
-{
-	int	i;
-	int	line_len;
-	int	buf_len;
+	int		i;
+	int		lenline
+	char	*newstr;
 
 	i = 0;
-	line_len = ft_strlen(line);
-	while (buf[i] && buf[i] != '\n')
-		i++;
-	buf_len = ft_strlen(buf[++i]); //MAYBE REMOVE ++ FROM THE INDEX
-	ft_strcpy(line, buf[i], len)
-	return (0);
+	lenline = ft_strlen(line) + 1;
+	// est-ce qu'il y a un '\n' ?
+	newstr = malloc(sizeof(char) * lenline + newline);// si oui → copy buf until newline into line
+	if (!newstr)
+		return (NULL); //secu malloc
+	ft_strcpy(newstr, line, lenline)// copier line dans new
+	free(line);
+	line = NULL;// free line + mettre à nul
+	ft_strcpy(&newstr[lenline], buf, newline + 1);// vider la partie copiée du buffer
+	while (buf[newline])
+		buf[i++] = buf[newline++];
+	buf[i] = '\0';
+				// return line
+	return (newstr);
+			// si non → copy buffer en entier dans line
 }
