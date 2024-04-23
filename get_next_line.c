@@ -14,27 +14,50 @@
 
 char	*get_next_line(int fd)
 {
-    static char		buf[BUFFER_SIZE];
+    static char		buf[BUFFER_SIZE + 1];
+	ssize_t			nb_read;
     char			*line;
-    int				i;
-	
-    i = 0;
-	line = NULL;// initialiser a NULL pour + de secu
-	if (BUFFER_SIZE <= 0 || fd < 0)// Safety check
+
+	line = NULL;
+	if (BUFFER_SIZE <= 0 || fd < 0)
         return (NULL);
-	if (buf)// while buffer not empty
-		gnl_buffer_to_line(buf, line, gnl_found_newline(buf));// function buffer_into_line
-	if (gnl_found_newline(line))
+	if (buf[0])
+		line = gnl_buffer_to_line(buf, line, gnl_found_newline(buf));
+	if (ft_memchr(line, '\n', ft_strlen(line)))
 		return (line);
-    while (read(fd, buf, BUFFER_SIZE))// attempt to read
+    while (1)
     {
-		gnl_buffer_to_line(buf, line, gnl_found_newline(buf));// function buffer_into_line
-		if (gnl_found_newline(line))
+		nb_read = read(fd, buf, BUFFER_SIZE);
+		if (nb_read < 0)
+			return (free(line), NULL);
+		if (!nb_read)
+			return (line);
+		buf[nb_read] = '\0';
+		line = gnl_buffer_to_line(buf, line, gnl_found_newline(buf));
+		if (ft_memchr(line, '\n', ft_strlen(line)))
 			return (line);
     }
-	if (buf)// while buffer not empty
-		gnl_buffer_to_line(buf, line, gnl_found_newline(buf));// function buffer_into_line
     return (line);
+}
+
+char	*gnl_buffer_to_line(char *buf, char *line, int newline)
+{
+	int		i;
+	int		lenline;
+	char	*newstr;
+
+	lenline = ft_strlen(line);
+	newstr = malloc(sizeof(char) * (lenline + newline + 1));
+	if (!newstr)
+		return (NULL);
+	ft_strcpy(newstr, line, lenline + 1);
+	free(line);
+	ft_strcpy(&newstr[lenline], buf, newline + 1);
+	i = 0;
+	while (buf[newline])
+		buf[i++] = buf[newline++];
+	buf[i] = '\0';
+	return (newstr);
 }
 
 int	gnl_found_newline(char *str)
@@ -42,34 +65,10 @@ int	gnl_found_newline(char *str)
     int i;
 
     i = 0;
-    while (str[i])
+    while (str && str[i])
     {
         if (str[i++] == '\n')
             return (i);
     }
-    return (ft_strlen(str)); // +1 ?
-}
-
-char	*gnl_buffer_to_line(char *buf, char *line, int newline)
-{
-	int		i;
-	int		lenline
-	char	*newstr;
-
-	i = 0;
-	lenline = ft_strlen(line) + 1;
-	// est-ce qu'il y a un '\n' ?
-	newstr = malloc(sizeof(char) * lenline + newline);// si oui → copy buf until newline into line
-	if (!newstr)
-		return (NULL); //secu malloc
-	ft_strcpy(newstr, line, lenline)// copier line dans new
-	free(line);
-	line = NULL;// free line + mettre à nul
-	ft_strcpy(&newstr[lenline], buf, newline + 1);// vider la partie copiée du buffer
-	while (buf[newline])
-		buf[i++] = buf[newline++];
-	buf[i] = '\0';
-				// return line
-	return (newstr);
-			// si non → copy buffer en entier dans line
+    return (ft_strlen(str));
 }
