@@ -12,20 +12,20 @@
 
 #include "get_next_line.h"
 
-int ft_strlen(char *str)
+int	ft_strlen(char *str)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (str && str[i])
-        i++;
-    return (i);
+	i = 0;
+	while (str && str[i])
+		i++;
+	return (i);
 }
 
 int	ft_strcpy(char *dst, const char *src, size_t dstlen)
 {
-	size_t i;
-	int len;
+	size_t	i;
+	int		len;
 
 	len = ft_strlen((char *)src);
 	if (dstlen == 0 || !dst)
@@ -46,6 +46,8 @@ void	*ft_memchr(const void *s, int c, size_t n)
 	unsigned char	*us;
 	unsigned char	uc;
 
+	if (!s)
+		return (NULL);
 	i = 0;
 	us = (unsigned char *)s;
 	uc = (unsigned char)c;

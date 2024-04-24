@@ -14,30 +14,30 @@
 
 char	*get_next_line(int fd)
 {
-    static char		buf[BUFFER_SIZE + 1];
-	ssize_t			nb_read;
-    char			*line;
+	static char			buf[BUFFER_SIZE + 1];
+	ssize_t				nb_read;
+	char				*line;
 
 	line = NULL;
 	if (BUFFER_SIZE <= 0 || fd < 0)
-        return (NULL);
+		return (NULL);
 	if (buf[0])
 		line = gnl_buffer_to_line(buf, line, gnl_found_newline(buf));
 	if (ft_memchr(line, '\n', ft_strlen(line)))
 		return (line);
-    while (1)
-    {
+	while (1)
+	{
 		nb_read = read(fd, buf, BUFFER_SIZE);
 		if (nb_read < 0)
-			return (free(line), NULL);
+			return (check_freeline(line), NULL);
 		if (!nb_read)
-			return (line);
+			return (free(line), NULL);
 		buf[nb_read] = '\0';
 		line = gnl_buffer_to_line(buf, line, gnl_found_newline(buf));
 		if (ft_memchr(line, '\n', ft_strlen(line)))
 			return (line);
-    }
-    return (line);
+	}
+	return (line);
 }
 
 char	*gnl_buffer_to_line(char *buf, char *line, int newline)
@@ -51,7 +51,7 @@ char	*gnl_buffer_to_line(char *buf, char *line, int newline)
 	if (!newstr)
 		return (NULL);
 	ft_strcpy(newstr, line, lenline + 1);
-	free(line);
+	check_freeline(line);
 	ft_strcpy(&newstr[lenline], buf, newline + 1);
 	i = 0;
 	while (buf[newline])
@@ -62,13 +62,19 @@ char	*gnl_buffer_to_line(char *buf, char *line, int newline)
 
 int	gnl_found_newline(char *str)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (str && str[i])
-    {
-        if (str[i++] == '\n')
-            return (i);
-    }
-    return (ft_strlen(str));
+	i = 0;
+	while (str && str[i])
+	{
+		if (str[i++] == '\n')
+			return (i);
+	}
+	return (ft_strlen(str));
+}
+
+void	check_freeline(char *line)
+{
+	if (line)
+		free(line);
 }
