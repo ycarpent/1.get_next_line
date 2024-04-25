@@ -24,7 +24,6 @@
 
 int		ft_strlen(char *str);
 int		ft_strcpy(char *dst, const char *src, size_t dstlen);
-void	*ft_memchr(const void *s, int c, size_t n);
 char	*get_next_line(int fd);
 char	*gnl_buffer_to_line(char *buf, char *line, int newline);
 int		gnl_found_newline(char *str);

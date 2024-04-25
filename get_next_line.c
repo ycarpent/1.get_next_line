@@ -23,18 +23,18 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (buf[0])
 		line = gnl_buffer_to_line(buf, line, gnl_found_newline(buf));
-	if (ft_memchr(line, '\n', ft_strlen(line)))
+	if (line && line[ft_strlen(line) - 1] == '\n')
 		return (line);
 	while (1)
 	{
 		nb_read = read(fd, buf, BUFFER_SIZE);
 		if (nb_read < 0)
-			return (check_freeline(line), NULL);
-		if (!nb_read)
 			return (free(line), NULL);
+		if (!nb_read)
+			return (line);
 		buf[nb_read] = '\0';
 		line = gnl_buffer_to_line(buf, line, gnl_found_newline(buf));
-		if (ft_memchr(line, '\n', ft_strlen(line)))
+		if (line && line[ft_strlen(line) - 1] == '\n')
 			return (line);
 	}
 	return (line);
@@ -51,7 +51,7 @@ char	*gnl_buffer_to_line(char *buf, char *line, int newline)
 	if (!newstr)
 		return (NULL);
 	ft_strcpy(newstr, line, lenline + 1);
-	check_freeline(line);
+	free(line);
 	ft_strcpy(&newstr[lenline], buf, newline + 1);
 	i = 0;
 	while (buf[newline])
@@ -71,10 +71,4 @@ int	gnl_found_newline(char *str)
 			return (i);
 	}
 	return (ft_strlen(str));
-}
-
-void	check_freeline(char *line)
-{
-	if (line)
-		free(line);
 }
